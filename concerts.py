@@ -78,6 +78,9 @@ with sync_playwright() as playwright:
             # get_text() grabs text; separator='\n' ensures elements are on new lines
             raw_text = soup.get_text(separator='\n', strip=True)
 
+            # Remove any trailing embedded HTML payload that starts at a doctype marker.
+            raw_text = re.split(r'<!doctype html>', raw_text, flags=re.IGNORECASE)[0].rstrip()
+
             # Generate the filename based on your criteria
             # 1. Strip 'http://', 'https://', and 'www.'
             filename = re.sub(r'^https?://(www\.)?', '', url)
