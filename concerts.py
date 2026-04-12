@@ -1,7 +1,8 @@
-from bs4 import BeautifulSoup
-from playwright.sync_api import sync_playwright
-from pathlib import Path
 import re
+from pathlib import Path
+
+from bs4 import BeautifulSoup
+from playwright.sync_api import TimeoutError as PlaywrightTimeoutError, sync_playwright
 
 urls = [
     'https://www.bandsintown.com/a/98-jimmy-eat-world',
@@ -19,23 +20,57 @@ urls = [
     'https://www.bandsintown.com/a/61-goo-goo-dolls',
 ]
 
-USER_AGENT = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+USER_AGENT = (
+    'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36'
+)
 LAZY_LOAD_WAIT_MS = 5000
+SHOW_MORE_TIMEOUT_MS = 5000
 OUTPUT_DIR = Path('tour')
+VIEWPORT = {'width': 1440, 'height': 2200}
+STEALTH_INIT_SCRIPT = """
+Object.defineProperty(navigator, 'webdriver', {get: () => undefined});
+Object.defineProperty(navigator, 'plugins', {get: () => [1, 2, 3, 4, 5]});
+Object.defineProperty(navigator, 'languages', {get: () => ['en-US', 'en']});
+"""
 
 
 OUTPUT_DIR.mkdir(exist_ok=True)
 
 
+def expand_show_more_dates(page):
+    event_links = page.locator("a[href*='/e/']")
+    initial_event_count = event_links.count()
+    show_more_dates = page.locator('div', has_text='Show More Dates').first
+
+    if not show_more_dates.count():
+        page.wait_for_timeout(LAZY_LOAD_WAIT_MS)
+        return
+
+    try:
+        show_more_dates.click(force=True, timeout=SHOW_MORE_TIMEOUT_MS)
+        page.wait_for_timeout(LAZY_LOAD_WAIT_MS)
+
+        if event_links.count() == initial_event_count and show_more_dates.count():
+            show_more_dates.click(force=True, timeout=SHOW_MORE_TIMEOUT_MS)
+            page.wait_for_timeout(LAZY_LOAD_WAIT_MS)
+    except PlaywrightTimeoutError:
+        page.wait_for_timeout(LAZY_LOAD_WAIT_MS)
+
+
 with sync_playwright() as playwright:
-    browser = playwright.chromium.launch(headless=True)
-    page = browser.new_page(user_agent=USER_AGENT)
+    browser = playwright.chromium.launch(
+        headless=True,
+        args=['--disable-blink-features=AutomationControlled'],
+    )
+    context = browser.new_context(user_agent=USER_AGENT, viewport=VIEWPORT, locale='en-US')
+    context.add_init_script(STEALTH_INIT_SCRIPT)
+    page = context.new_page()
 
     for url in urls:
         try:
             print(f'Fetching {url}...')
-            page.goto(url, wait_until='load', timeout=30000)
-            # page.wait_for_timeout(LAZY_LOAD_WAIT_MS)
+            page.goto(url, wait_until='domcontentloaded', timeout=30000)
+            expand_show_more_dates(page)
 
             # Parse the rendered HTML content after the lazy-load wait.
             soup = BeautifulSoup(page.content(), 'html.parser')
@@ -49,7 +84,10 @@ with sync_playwright() as playwright:
             filename = filename.replace('bandsintown.com/a/', '')  # Special case for Bandsintown URLs
             # 2. Strip trailing '/tour', '/on-tour' (for Toad the Wet Sprocket), and standard trailing slashes
             filename = re.sub(r'/tour/?$|/on-tour/?$|/$', '', filename)
-            # 3. Replace any remaining slashes with underscores to prevent file path errors
+            # 3. Remove numeric prefixes and hyphens from the derived filename
+            filename = re.sub(r'\d+', '', filename)
+            filename = filename.replace('-', '')
+            # 4. Replace any remaining slashes with underscores to prevent file path errors
             filename = filename.replace('/', '_') + '.txt'
             output_path = OUTPUT_DIR / filename
 
@@ -62,6 +100,7 @@ with sync_playwright() as playwright:
         except Exception as e:
             print(f'❌ Failed to fetch {url}. Error: {e}\n')
 
+    context.close()
     browser.close()
 
 print('Scraping complete.')
