@@ -22,7 +22,7 @@ Português
 Deutsch
 Rage Against the Machine
 Verified
-2,257,717 Followers
+2,262,967 Followers
 Never miss another Rage Against the Machine concert. Get alerts about tour announcements, concert tickets, and shows near you with a free Bandsintown account.
 Follow
 No upcoming shows
@@ -71,7 +71,7 @@ $44.95
 2Bhip Rage Against The Machine T Shir...
 $44.95 - $46.95
 2Bhip Rage Against The Machine T Shir...
-$44.95 - $46.95
+$44.95
 Rage Against The Machine Zack De La R...
 $17.99
 Evil Empire (Limited Edition Red Colo...
@@ -83,13 +83,13 @@ $24.98
 Renegades
 $26.98
 Evil Empire
-$26.32
+$25.98
 Rage Against The Machine
-$7.99
+$9.98
 Live at the Grand Olympic Auditorium
 $14.54
 Rage Against The Machine
-$27.82
+$27.80
 Rage Against The Machine Picture
 $24.58
 Rage Against The Machine - XX 20th An...
@@ -97,9 +97,9 @@ $22.49
 Rage Against The Machine - XX
 $7.99
 Rage Against The Machine - XX Deluxe
-$89.11
+$88.04
 Rage Against The Machine
-$25.98
+$29.99
 Rage Against the Machine
 $19.32
 View All
@@ -164,7 +164,7 @@ $44.95
 2Bhip Rage Against The Machine T Shir...
 $44.95 - $46.95
 2Bhip Rage Against The Machine T Shir...
-$44.95 - $46.95
+$44.95
 Rage Against The Machine Zack De La R...
 $17.99
 Evil Empire (Limited Edition Red Colo...
@@ -176,13 +176,13 @@ $24.98
 Renegades
 $26.98
 Evil Empire
-$26.32
+$25.98
 Rage Against The Machine
-$7.99
+$9.98
 Live at the Grand Olympic Auditorium
 $14.54
 Rage Against The Machine
-$27.82
+$27.80
 Rage Against The Machine Picture
 $24.58
 Rage Against The Machine - XX 20th An...
@@ -190,9 +190,9 @@ $22.49
 Rage Against The Machine - XX
 $7.99
 Rage Against The Machine - XX Deluxe
-$89.11
+$88.04
 Rage Against The Machine
-$25.98
+$29.99
 Rage Against the Machine
 $19.32
 View All
@@ -271,15 +271,3 @@ label
 Reject All
 Confirm My Choices
 Freestar.com
-close dialog
-Advertisement
-showing this ad
-after
-you’ve finished reading to keep content free
-Our ads only display when you’ve
-finished
-reading content
-Reader-first ads that display
-after
-you’ve finished reading
-close dialog
