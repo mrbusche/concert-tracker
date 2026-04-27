@@ -18,6 +18,7 @@ urls = [
     'https://www.bandsintown.com/a/230-shinedown',
     'https://www.bandsintown.com/a/303-chevelle',
     'https://www.bandsintown.com/a/61-goo-goo-dolls',
+    'https://www.bandsintown.com/a/1754-eminem',
 ]
 
 USER_AGENT = (
